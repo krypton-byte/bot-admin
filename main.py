@@ -86,55 +86,19 @@ def cari():
 => .header <url>
 => .wikipedia <query>
 => .author
-=> .lrc <Title>
-=> .showlrc <Id>
 => .qrmaker <text>
 <======================>
 ''')
-        elif perintah[0] in ['.showlrc','.showlyrics']:
+        elif perintah[0] in ['.lrc','.lyr']:
             body[hasilCari[0]].click()
-            if len(perintah) == 1:
-                kirim('contoh: .showlrc <ID>')
-            else:
-                car=datatoken(token=perintah[1]).cari()
-                if car:
-                    print(car[0][1])
-                    pars=BeautifulSoup(requests.get(car[0][1],headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'}).text,'html.parser')
-                    pesan=pars.title.text+'\n'
-                    if pars.find_all('span',class_="lyrics__content__ok"):
-                        for i in pars.find_all('span',class_="lyrics__content__ok"):
-                            pesan+="\n%s"%i.text
-                            print(str(i.text))
-                        kirim(pesan)
-                    elif pars.find_all('span', class_='lyrics__content__warning'):
-                        for i in pars.find_all('span',class_="lyrics__content__ok"):
-                            pesan+="\n%s"%i.text
-                            print(str(i.text))
-                        kirim(pesan)
-                    else:
-                        kirim(pesan+'\n lirik Tidak Ada')
+            if  len(' '.join(perintah[1:]).split('|')) == 2:
+                req=BeautifulSoup(requests.get('http://api.lololyrics.com/0.5/getLyric', params={'artist':' '.join(perintah[1:]).split('|')[0],'track':' '.join(perintah[1:]).split('|')[1]}).text,'lxml')
+                if req.status.text == 'OK':
+                    kirim(' cover : %s\n%s'%(req.album.text, req.response.text))
                 else:
-                    kirim('ID : *%s* Tidak Tersedia'%perintah[1])
-        elif perintah[0] in ['.lrc','.lyric']:
-            body[hasilCari[0]].click()
-            if len(perintah) == 1:
-                kirim('contoh : .lrc <judul>')
+                    kirim('Lirik Yg Anda Cari Tidak Tersedia')
             else:
-                body[hasilCari[0]].click()
-                url='https://api.musixmatch.com/ws/1.1/track.search'
-                params={
-                    'apikey':'f009dbb46a73fd4cdf7fe2cc8d7d8648',
-                    'q':' '.join(perintah[1:])
-                }
-                pars=json.loads(requests.get(url, params=params).text)['message']['body']['track_list']
-                textpesan=''
-                if pars:
-                    for i in pars:
-                        textpesan+='Judul : *%s*\nID : *%s*\n'%(i['track']['track_name'] ,i['track']['track_id'])
-                        datatoken(token=i['track']['track_id'], url=i['track']['track_share_url']).buat()
-                    kirim(textpesan)
-                else:
-                    kirim('*Lirik %s Tidak Ada*'%(' '.join(perintah[1:])))
+                kirim('Format : .lrc <artist>|<judul lagu>\ncontoh : .lrc alan walker|end of time')
         elif perintah[0] in ['.movie','.film']:
             body[hasilCari[0]].click()
             if len(perintah) == 1:
