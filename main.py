@@ -73,7 +73,7 @@ def cari():
             kirim('''
 <=======> *MENU* <=======>
 => .covid19
-=> .rename
+=> .rename <ttle Grup>
 => .love
 => .editdesk
 => .intro
@@ -86,7 +86,9 @@ def cari():
 => .header <url>
 => .wikipedia <query>
 => .author
-=> .qrmaker
+=> .lrc <Title>
+=> .showlrc <Id>
+=> .qrmaker <text>
 <======================>
 ''')
         elif perintah[0] in ['.showlrc','.showlyrics']:
