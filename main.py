@@ -87,14 +87,26 @@ def cari():
 => .wikipedia <query>
 => .author
 => .qrmaker <text>
+=> .lrc artist|title
+=> short1 <url>
 <======================>
 ''')
+        elif perintah[0] in ['.short1','.short1']:
+            body[hasilCari[0]].click()
+            if len(perintah) == 1:
+                kirim('CONTOH : .short1 https://www.googel.com')
+            else:
+                hasil=requests.get('https://v.gd/create.php',params={'format':'simple','url':perintah[1]})
+                if 'Error:' in hasil.text:
+                    kirim('Shortlink gagal, Pastikan memasukan Url Dengan Benar')
+                else:
+                    kirim('*Shortlink berhasil*\nURL : %s\nSHORTLINK : %s'%(perintah[1], hasil.text))
         elif perintah[0] in ['.lrc','.lyr']:
             body[hasilCari[0]].click()
             if  len(' '.join(perintah[1:]).split('|')) == 2:
                 req=BeautifulSoup(requests.get('http://api.lololyrics.com/0.5/getLyric', params={'artist':' '.join(perintah[1:]).split('|')[0],'track':' '.join(perintah[1:]).split('|')[1]}).text,'lxml')
                 if req.status.text == 'OK':
-                    kirim(' cover : %s\n%s'%(req.album.text, req.response.text))
+                    kirim(' COVER : %s\n%s'%(req.album.text, req.response.text))
                 else:
                     kirim('Lirik Yg Anda Cari Tidak Tersedia')
             else:
@@ -129,11 +141,25 @@ Synopsis[Id]: %s
                     kirim('*MA\'AF FILM "%s" BELUM TERSEDIA*'%' '.join(perintah[1:]))
         elif perintah[0] in ['.covid','.covid19']:
             body[hasilCari[0]].click()
-            par=BeautifulSoup(requests.get('https://kawalcorona.com/').text,'html.parser')
-            hasil=par.find_all('p', class_='text-white mb-0')[6:][0].text.replace('POSITIF','').replace('MENINGGAL','').replace('SEMBUH','').split(' , ')
-            print(str(hasil))
+            x=requests.get('https://api.kawalcorona.com/indonesia')
             waktu = time.asctime(time.localtime(time.time())).replace('Sun','Min').replace('Min','Sen').replace('Tue','Sel').replace('Wed','Rab').replace('Thu','Kam').replace('Fri','Jum').replace('Sat','Sab').split(' ')
-            kirimTextMedia('''
+            if x.status_code ==200:
+                hasil=json.loads(x.text)[0]
+                kirimTextMedia('''
+=======> *INDONESIA* <=======
+=> Date : %s
+=> Positif   : %s 👥
+=> Meninggal : %s 👥
+=> Sembuh    : %s 👥
+=> Dirawat   : %s 👥
+===========================
+
+    '''%(' '.join([waktu[0], waktu[2], waktu[1], waktu[4]]), hasil['positif'],  hasil['meninggal'], hasil['sembuh'], hasil['dirawat']),'D:/bot-admin/%s'%random.choice(['covid.png','covid2.png','covid3.png','covid4.png']))
+            else:
+                par=BeautifulSoup(requests.get('https://kawalcorona.com/').text,'html.parser')
+                hasil=par.find_all('p', class_='text-white mb-0')[6:][0].text.replace('POSITIF','').replace('MENINGGAL','').replace('SEMBUH','').split(' , ')
+                print(str(hasil))
+                kirimTextMedia('''
 =======> *INDONESIA* <=======
 => Date : %s
 => Positif   : %s 👥
@@ -141,7 +167,7 @@ Synopsis[Id]: %s
 => Sembuh    : %s 👥
 ===========================
 
-'''%(' '.join([waktu[0], waktu[2], waktu[1], waktu[4]]), hasil[0],  hasil[2], hasil[1]),'D:/bot-admin/%s'%random.choice(['covid.png','covid2.png','covid3.png','covid4.png']))
+    '''%(' '.join([waktu[0], waktu[2], waktu[1], waktu[4]]), hasil[0],  hasil[2], hasil[1]),'D:/bot-admin/%s'%random.choice(['covid.png','covid2.png','covid3.png','covid4.png']))
         elif perintah[0] in ['.love','.lope']:
             body[hasilCari[0]].click()
             kirim('❤️')
@@ -248,7 +274,7 @@ Synopsis[Id]: %s
             kirimTextMedia('''
 <========================>
 *Nama*   : BOT [BETA]
-*Update* : Sel, 14 Jul 2020
+*Update* : Kam, 16 Jul 2020
 *Time*   : %s
 *Unread* : %s pesan
 Ketik " *.help*" untuk bantuan
