@@ -2,10 +2,18 @@ from selenium import webdriver
 import selenium, random
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
-import requests, json, time, datetime, wikipedia
+import requests, json, time, datetime, wikipedia, sqlite3
 from googletrans import Translator
 from datetime import date
 import spam, pyqrcode, xerox
+cektable=sqlite3.connect('data.db')
+try:
+    cektable.cursor().execute('SELECT * FROM CHAT')
+except:
+    cektable.cursor().execute('CREATE TABLE CHAT (cal TEXT, count INTEGER)')
+    cektable.commit()
+
+    
 #inisialisasi
 wikipedia.set_lang('id')
 tra=Translator()
@@ -15,22 +23,42 @@ driver = webdriver.Chrome()
 driver.get('https://web.whatsapp.com')
 input('enter jika sudah scan barcode : ')
 import sqlite3
-class datatoken:
-    def __init__(self, token=None, url=None):
-        self.token = token
-        self.token = token
-        self.url   = url
-    def buat(self):
+class hits:
+    def kemarin():
         db=sqlite3.connect('data.db')
         c=db.cursor()
-        c.execute('INSERT INTO LIRIK VALUES ("%s","%s")'%(self.token, self.url))
-        db.commit()
-        return True
-    def cari(self):
+        try:
+            return c.execute('SELECT * FROM CHAT (cal, count) WHERE cal=date("now","-1 day")').fetchall()[0][1]
+        except:
+            return 0
+    def kemarinlusa():
         db=sqlite3.connect('data.db')
         c=db.cursor()
-        hasil=c.execute("SELECT * FROM LIRIK WHERE ID='%s'"%(self.token)).fetchall()
-        return hasil
+        try:
+            return c.execute('SELECT * FROM CHAT (cal, count) WHERE cal=date("now","-2 day")').fetchall()[0][1]
+        except:
+            return 0
+    def sekarang():
+        db=sqlite3.connect('data.db')
+        c=db.cursor()
+        try:
+            hasil=c.execute(f'SELECT * FROM CHAT WHERE cal=date("now")').fetchall()[0][1]
+            db.commit()
+            return hasil
+        except:
+            return 0
+    def sekarangbuat():
+        db=sqlite3.connect('data.db')
+        c=db.cursor()
+        hits=0
+        if c.execute('SELECT * FROM CHAT WHERE cal=date("now")').fetchall():
+            z=c.execute('SELECT * FROM CHAT WHERE cal=date("now")').fetchall()
+            c.execute(f'UPDATE CHAT SET count={z[0][1]+1} WHERE cal=date("now")')
+            db.commit()
+        else:
+            z=c.execute('INSERT INTO CHAT VALUES (date("now"),1)').fetchall()
+            db.commit() 
+
 def cekduplikat(arr):
     setArr = set()
     for cek in arr:
@@ -45,6 +73,7 @@ def jumlahBelumTerbaca():
         jum+=int(angka.text)
     return jum
 def kirimTextMedia(pesan, path):
+    hits.sekarangbuat()
     driver.find_element_by_css_selector('span[data-icon="clip"]').click()
     driver.find_element_by_css_selector('input[type="file"]').send_keys(path)
     time.sleep(3)
@@ -55,11 +84,13 @@ def kirimTextMedia(pesan, path):
     form_pesan.send_keys(Keys.CONTROL+'v')
     driver.find_element_by_xpath('//span[@data-testid="send"]').click()
 def kirimMedia(path):
+    hits.sekarangbuat()
     driver.find_element_by_css_selector('span[data-icon="clip"]').click()
     driver.find_element_by_css_selector('input[type="file"]').send_keys(path)
     time.sleep(2)
     driver.find_element_by_xpath('//span[@data-testid="send"]').click() #data-icon="send" data-testid="send"
 def kirim(pesan):
+    hits.sekarangbuat()
     form_pesan=driver.find_element_by_class_name('_3uMse')
     xerox.copy(pesan)
     form_pesan.send_keys(Keys.CONTROL+'v')
@@ -89,6 +120,7 @@ def cari():
 => .qrmaker <text>
 => .lrc artist|title
 => short1 <url>
+=> .count
 <======================>
 ''')
         elif perintah[0] in ['.short1','.short1']:
@@ -296,6 +328,19 @@ Ketik " *.help*" untuk bantuan
             else:
                 pyqrcode.create(' '.join(hasilCari[1].text.split(' ')[1:])).png('bar.png', scale=6)
                 kirimTextMedia('*Berhasil Di Buat*\n*TEXT :* %s'%(' '.join(hasilCari[1].text.split(' ')[1:])),'D:/bot-admin/bar.png')
+        elif perintah[0] == '.count':
+            body[hasilCari[0]].click()
+            kemarin=hits.kemarin()
+            lusa=hits.kemarinlusa()
+            sekarang=hits.sekarang()
+            juml=kemarin+lusa+sekarang
+            pesan='''
+sekarang    : %s pesan
+kemarin     : %s pesan
+kemarin lusa: %s pesan
+jumlah      : %s pesan
+'''%(sekarang,kemarin,lusa,juml)
+            kirim(pesan)
         elif perintah[0] in ['.author','.admin']:
             body[hasilCari[0]].click()
             kirimTextMedia('Tambahkan saya sebagai kontak di WhatsApp. https://wa.me/qr/6ZQZQ45RSKYLG1','D:/bot-admin/admin.jpeg')
