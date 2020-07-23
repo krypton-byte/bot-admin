@@ -58,6 +58,7 @@ class hits:
         else:
             z=c.execute('INSERT INTO CHAT VALUES (date("now"),1)').fetchall()
             db.commit() 
+    
 
 def cekduplikat(arr):
     setArr = set()
@@ -72,6 +73,7 @@ def jumlahBelumTerbaca():
     for angka in driver.find_elements_by_xpath('//span[@class="_31gEB"]'):
         jum+=int(angka.text)
     return jum
+
 def kirimTextMedia(pesan, path):
     hits.sekarangbuat()
     driver.find_element_by_css_selector('span[data-icon="clip"]').click()
@@ -121,6 +123,7 @@ def cari():
 => .lrc artist|title
 => short1 <url>
 => .count
+web : https://5d75e31356fc.ngrok.io
 <======================>
 ''')
         elif perintah[0] in ['.short1','.short1']:

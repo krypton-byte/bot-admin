@@ -1,0 +1,115 @@
+{% extends "layout/v.html"%}
+{%block content%}
+
+{% if up =='Dashboard' %}
+
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">Jumlah Pesan</p>
+                <h3 class="card-title"><p id="valpesan"></p>
+                    <small>pesan</small>
+                </h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons text-danger">warning</i>
+                    <a href="javascript:;">Get More Space...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">info_outline</i>
+            </div>
+            <p class="card-category">Fixed Issues</p>
+            <h3 class="card-title">30</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">local_offer</i> Tracked from Github
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+     async function loop(){
+             while(true){
+                const Http = new XMLHttpRequest();
+                Http.onreadystatechange = function() {
+                  if(this.readyState == 4 && this.status == 200){
+                    document.getElementById('valpesan').innerHTML = this.responseText;
+                  }
+                }
+                Http.open('GET','https://5d75e31356fc.ngrok.io/data')
+                Http.send()
+                await new Promise(resolve => setTimeout(resolve, 1000 ))
+             }
+            }
+            loop()
+    </script>
+{% elif up == 'User Profile' %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-profile">
+          <div class="card-avatar">
+            <a href="javascript:;">
+              <img class="img" src="{{url_for('static',filename='assets/profile/avatar.jpg')}}" />
+            </a>
+          </div>
+          <div class="card-body">
+            <h6 class="card-category text-gray">CEO / Co-Founder</h6>
+            <h4 class="card-title">K_BOT</h4>
+            <p class="card-description">
+                Bot adalah program komputer yang dijalankan untuk melakukan pekerjaan-pekerjaan otomatis seperti Membalas Pesan Otomatis dll
+            </p>
+            <a href="https://api.whatsapp.com/send?phone=6285722443235&text=.intro&source=&data=&app_absent=" class="btn btn-primary btn-round">chat</a>
+          </div>
+        </div>
+      </div>
+      <div class="card card-nav-tabs" style="width: 20rem;">
+        <div class="card-header card-header-danger">
+          Featured
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">SPAM SMS</li>
+          <li class="list-group-item">BARCODE MAKER</li>
+          <li class="list-group-item">WIKIPEDIA</li>
+          <li class="list-group-item">PENCARIAN</li>
+        </ul>
+      </div>
+    </div>
+{% elif up == 'Author' %}
+<div class="row">
+<div class="card" style="width: 20rem;">
+    <img class="card-img-top" src="{{url_for('static',filename='assets/author/1.jpeg')}}" alt="Card image cap">
+    <div class="card-body">
+      <p class="card-text">Tambahkan saya sebagai kontak di WhatsApp. https://wa.me/qr/6ZQZQ45RSKYLG1.</p>
+    </div>
+  </div>
+  <div class="card" style="width: 20rem;left:20px;">
+    <img class="card-img-top" src="{{url_for('static',filename='assets/author/2.jpeg')}}" alt="Card image cap">
+    <div class="card-body">
+      <p class="card-text">Tambahkan saya sebagai kontak di WhatsApp. https://wa.me/qr/X33BAQ5LFHP3J1</p>
+    </div>
+  </div>
+  <div class="card" style="width: 20rem;left:40px;">
+    <img class="card-img-top" src="{{url_for('static',filename='assets/author/3.jpeg')}}" alt="Card image cap">
+    <div class="card-body">
+      <p class="card-text">Tambahkan saya sebagai kontak di WhatsApp. https://wa.me/qr/QC5YYLIXK7OML1</p>
+    </div>
+  </div>
+  </div>
+
+{% else %}
+<h1>ERROR</h1>
+{%endif%}
+{%endblock%}
