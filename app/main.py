@@ -1,9 +1,9 @@
 from flask import *
-import sqlite3
+import sqlite3,requests,json
 app=Flask(__name__)
 @app.route('/')
 def index():
-    return render_template('index.html',dashboard='active',up='Dashboard')
+    return render_template('index.html',dashboard='active',up='Dashboard',URL=json.loads(requests.get('http://127.0.0.1:4040/api/tunnels').text)['tunnels'][0]['public_url']+'/data')
 @app.route('/user')
 def user():
     return render_template('index.html',profile='active',up='User Profile')

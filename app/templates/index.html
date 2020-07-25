@@ -49,7 +49,7 @@
                     document.getElementById('valpesan').innerHTML = this.responseText;
                   }
                 }
-                Http.open('GET','https://5d75e31356fc.ngrok.io/data')
+              Http.open('GET','{{URL}}' )
                 Http.send()
                 await new Promise(resolve => setTimeout(resolve, 1000 ))
              }

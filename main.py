@@ -28,7 +28,7 @@ class hits:
         db=sqlite3.connect('data.db')
         c=db.cursor()
         try:
-            return c.execute('SELECT * FROM CHAT (cal, count) WHERE cal=date("now","-1 day")').fetchall()[0][1]
+            return c.execute('SELECT * FROM CHAT  WHERE cal=date("now","-1 day")').fetchall()[0][1]
         except:
             return 0
     def kemarinlusa():
@@ -123,9 +123,9 @@ def cari():
 => .lrc artist|title
 => short1 <url>
 => .count
-web : https://5d75e31356fc.ngrok.io
+web : %s
 <======================>
-''')
+'''%(json.loads(requests.get('http://127.0.0.1:4040/api/tunnels').text)['tunnels'][0]['public_url']))
         elif perintah[0] in ['.short1','.short1']:
             body[hasilCari[0]].click()
             if len(perintah) == 1:
