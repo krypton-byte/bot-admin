@@ -8,7 +8,7 @@ def klikdokter(nomor):
         "Connection":"keep-alive",
         "Content-Length":"121",
         "Content-Type":"application/x-www-form-urlencoded",
-        "Cookie":"js_enabled=true; user_token=D8Na31vvquwtCT7Jy6Bju7KAIJ5iHuUB8KXJnfJo; _ga=GA1.3.1849872659.1594728174; _gid=GA1.3.1043323936.1594728174; js_enabled=true; __auc=181590701734d34e2d50a8defd8; _gid=GA1.2.1043323936.1594728174; __asc=5bf85d1c1734d8e752eb01c23b7; upgraded_laravel_session=eyJpdiI6ImVDZWhTK0Q2SW5mQjZzTlJpXC9HQ0hnPT0iLCJ2YWx1ZSI6InJWOHFaWjZrZHpHMnBwZ1RObVl1NTNzb2t5dDVTZ0JQTVgzTWdtRkNiZ2REOEFMdUJDTm1qNUxoaHBrcERvWFVLUkg5b0duRXN6MnFrUCtaVEN5TjRRPT0iLCJtYWMiOiIyNWJlOTVkM2ZjNGEzODEzNmQyMzgwNmM4M2NiNjdmNWI3Zjg4OWM3NDliMDJkNmM3NzA5MGJjNWIwMzNiMmIyIn0%3D; _ga_KRW7RGZYS5=GS1.1.1594734047.2.1.1594734122.0; _ga=GA1.2.1849872659.1594728174; _dc_gtm_UA-38846936-1=1; _gat_UA-38846936-1=1",
+        "Cookie":"js_enabled=true; _ga=GA1.3.1849872659.1594728174; __auc=181590701734d34e2d50a8defd8; user_token=DGmXuY2eMr3fqVVaPoQkPXvTDgRENSNtvm5nwkW1; _gid=GA1.3.1987657010.1595677399; js_enabled=true; __asc=7c76538017385c8df22f5a0eca7; _gid=GA1.2.1987657010.1595677399; _ga_KRW7RGZYS5=GS1.1.1595677398.4.1.1595677487.0; upgraded_laravel_session=eyJpdiI6Inp0VndTeXdrdGVVaXk3S0Zqa0hVWkE9PSIsInZhbHVlIjoiTDNDK2k3ZTJyVFBSYWNqK1FGRzl3UUt6Z0JiMEVkaE1NOG5ZVVRjUVlSd1RkM3ZsWjVFd3paZVNqTW1jZEFxd1IwNWN1REx6T1RRd0REejJtM2NQdnc9PSIsIm1hYyI6ImE4YTBjMzg5OTIzMDM0NmUwYzZhNWFiNDU0NGFmNjdmNjg0MTIyYTEyYTkzNDA3MDVhZGQ2M2IzZTA4MzI2YWYifQ%3D%3D; _ga=GA1.2.1849872659.1594728174",
         "DNT":"1",
         "Host":"www.klikdokter.com",
         "Origin":"https://www.klikdokter.com",
@@ -21,9 +21,9 @@ def klikdokter(nomor):
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
     }
     data={
-        "_token":"D8Na31vvquwtCT7Jy6Bju7KAIJ5iHuUB8KXJnfJo",
-        "back-to":"",
-        "full_name":"Krypton",
+        "_token":"DGmXuY2eMr3fqVVaPoQkPXvTDgRENSNtvm5nwkW1",
+        "back-to":"https://www.klikdokter.com/login?back-to=https%3A%2F%2Fwww.klikdokter.com%2F",
+        "full_name":"krypton",
         "email":"apikrypton@gmail.com",
         "phone":"%s"%nomor
     }

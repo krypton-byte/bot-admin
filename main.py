@@ -1,11 +1,16 @@
 from selenium import webdriver
+from vcf import vcf
 import selenium, random
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import requests, json, time, datetime, wikipedia, sqlite3
 from googletrans import Translator
 from datetime import date
-import spam, pyqrcode, xerox
+import spam, pyqrcode, xerox, igtools, maxim, bk
+from brainly import *
+option=webdriver.ChromeOptions()
+option.add_argument('--no-sandbox')
+option.add_argument('--disable-setuid-sandbox')
 cektable=sqlite3.connect('data.db')
 try:
     cektable.cursor().execute('SELECT * FROM CHAT')
@@ -13,7 +18,8 @@ except:
     cektable.cursor().execute('CREATE TABLE CHAT (cal TEXT, count INTEGER)')
     cektable.commit()
 
-    
+
+
 #inisialisasi
 wikipedia.set_lang('id')
 tra=Translator()
@@ -112,7 +118,10 @@ def cari():
 => .intro
 => .all
 => .dump2txt
+=> .dump2vcf
 => .spamx <num> <jum>
+=> .spam <num> <jum>
+=> .spam1 <num> <jum>
 => .spamas <num1> <num2>
 => .cari <query>
 => .film <query>
@@ -123,9 +132,20 @@ def cari():
 => .lrc artist|title
 => short1 <url>
 => .count
+=> .carig <query>
+=> .getfoll <query>
+=> .? <soal> #bot brainly
+catatan :
+        perintah Spam di Nonaktifkan
 web : %s
 <======================>
 '''%(json.loads(requests.get('http://127.0.0.1:4040/api/tunnels').text)['tunnels'][0]['public_url']))
+        elif perintah[0] in ['.carig','.cariig']:
+            body[hasilCari[0]].click()
+            kirim('\n'.join(igtools.search(perintah[1])))
+        elif perintah[0] in ['.getfoll','.getfollowers']:
+            body[hasilCari[0]].click()
+            kirim('\n'.join(igtools.get_followers(perintah[1])))
         elif perintah[0] in ['.short1','.short1']:
             body[hasilCari[0]].click()
             if len(perintah) == 1:
@@ -140,9 +160,12 @@ web : %s
             body[hasilCari[0]].click()
             if  len(' '.join(perintah[1:]).split('|')) == 2:
                 req=BeautifulSoup(requests.get('http://api.lololyrics.com/0.5/getLyric', params={'artist':' '.join(perintah[1:]).split('|')[0],'track':' '.join(perintah[1:]).split('|')[1]}).text,'lxml')
-                if req.status.text == 'OK':
-                    kirim(' COVER : %s\n%s'%(req.album.text, req.response.text))
-                else:
+                try:
+                    if req.status.text == 'OK':
+                        kirim(' COVER : %s\n%s'%(req.album.text, req.response.text))
+                    else:
+                        kirim('Lirik Yg Anda Cari Tidak Tersedia')
+                except AttributeError:
                     kirim('Lirik Yg Anda Cari Tidak Tersedia')
             else:
                 kirim('Format : .lrc <artist>|<judul lagu>\ncontoh : .lrc alan walker|end of time')
@@ -302,7 +325,53 @@ Synopsis[Id]: %s
                         else:
                             kirim('max : 8')
                     except ValueError:
-                        kirim('Format Salah : \n.spam 85xxxxx <jum>\n*gk support banyak-banyak so\'alnya butuh delay dan itu membuat system saya lamban jadi saya membatasi sampe 3*')
+                        kirim('Format Salah : \n.spam 85xxxxx <jum>\n*gk support banyak-banyak so\'alnya butuh delay dan itu membuat system saya lamban jadi saya membatasi sampe 8*')
+        elif perintah[0] in ['.spam','.spam']:
+            body[hasilCari[0]].click()
+            print(perintah[0])
+            if len(perintah) == 1:
+                kirim('Format Salah : \n.spam +62(8xx)xxx-xx-xxx <jum>\n*gk support banyak-banyak karna membutuh delay dan itu membuat system saya lamban jadi saya membatasi sampe 8*')
+            elif len(perintah) == 2:
+                if maxim.spam(perintah[1]):
+                    kirim('✅ Terkirim : %s'%(perintah[1]))
+                else:
+                    kirim('*Tidak Terkirim* : %s'%(perintah[1]))
+            else:
+                if len(perintah) == 3:
+                    try:
+                        if int(perintah[2]) <= 8:
+                            for c in range(int(perintah[2])):
+                                if maxim.spam(perintah[1]):
+                                    kirim('✅ Terkirim : %s'%(perintah[1]))
+                                else:
+                                    kirim('*Tidak Terkirim : %s'%(perintah[1]))
+                        else:
+                            kirim('max : 8')
+                    except ValueError:
+                        kirim('Format Salah : \n.spam1 +628xxxxxxx <jum>\n*gk support banyak-banyak so\'alnya butuh delay dan itu membuat system saya lamban jadi saya membatasi sampe 8*')
+        elif perintah[0] in ['.spam1','.spam1']:
+            body[hasilCari[0]].click()
+            print(perintah[0])
+            if len(perintah) == 1:
+                kirim('Format Salah : \n.spam1 +628xxxxxxx <jum>\n*gk support banyak-banyak karna membutuh delay dan itu membuat system saya lamban jadi saya membatasi sampe 8*')
+            elif len(perintah) == 2:
+                if bk.spam(perintah[1]):
+                    kirim('✅ Terkirim : %s'%(perintah[1]))
+                else:
+                    kirim('*Tidak Terkirim* : %s'%(perintah[1]))
+            else:
+                if len(perintah) == 3:
+                    try:
+                        if int(perintah[2]) <= 8:
+                            for c in range(int(perintah[2])):
+                                if bk.spam(perintah[1]):
+                                    kirim('✅ Terkirim : %s'%(perintah[1]))
+                                else:
+                                    kirim('*Tidak Terkirim : %s'%(perintah[1]))
+                        else:
+                            kirim('max : 8')
+                    except ValueError:
+                        kirim('Format Salah : \n.spam1 +628xxxxxxx <jum>\n*gk support banyak-banyak so\'alnya butuh delay dan itu membuat system saya lamban jadi saya membatasi sampe 8*')
         elif perintah[0] in ['.intro','.info']:
             body[hasilCari[0]].click()
             waktu = time.asctime(time.localtime(time.time())).replace('Sun','Min').replace('Min','Sen').replace('Tue','Sel').replace('Wed','Rab').replace('Thu','Kam').replace('Fri','Jum').replace('Sat','Sab').split(' ')
@@ -315,15 +384,21 @@ Synopsis[Id]: %s
 Ketik " *.help*" untuk bantuan
 <========================>
 '''%( '%s %s %s %s %s'%(waktu[0], waktu[2], waktu[1], waktu[4], waktu[3]), jumlahBelumTerbaca()),'D:/bot-admin/%s'%random.choice(['avatar.jpg','avatar2.jpg','avatar3.jpeg']))
-        elif perintah[0] in ['.dump2txt','.dumpcontact']:
+        elif perintah[0] == '.dump2txt':
             body[hasilCari[0]].click()
             bs=BeautifulSoup(driver.page_source,'html.parser')
             hasil=bs.find_all('span',class_='_3-cMa _3Whw5')[0].text.split(', ')
-            tulis=open('hasil.txt','w')
+            tulis=open('dump.txt','w')
             for tag in hasil[:-1]:
                 tulis.write(tag+'\n')
             tulis.close()
-            kirimMedia('D:/bot-admin/hasil.txt')
+            kirimMedia('D:/bot-admin/dump.txt')
+        elif perintah[0] == 'dump2vcf':
+            body[hasilCari[0]].click()
+            bs=BeautifulSoup(driver.page_source,'html.parser')
+            hasil=bs.find_all('span',class_='_3-cMa _3Whw5')[0].text.split(', ')
+            vcf(hasil[:-1])
+            kirimMedia('D:/bot-admin/dump.vcf')
         elif perintah[0] in ['.qrmaker','.qr']:
             body[hasilCari[0]].click()
             if len(perintah) == 1:
@@ -351,13 +426,56 @@ jumlah      : %s pesan
             body[hasilCari[0]].click()
             bs=BeautifulSoup(driver.page_source,'html.parser')
             hasil=bs.find_all('span',class_='_3-cMa _3Whw5')[0].text.split(', ')
+            form=driver.find_element_by_class_name('_3uMse')
             print(str(hasil))
             for tag in hasil[:-1]:
                 xerox.copy(tag)
-                driver.find_element_by_class_name('_3uMse').send_keys('@%s'%(Keys.CONTROL+'v'))
+                form.send_keys('@%s'%(Keys.CONTROL+'v'))
                 driver.find_element_by_class_name('matched-text').click()
-                driver.find_element_by_class_name('_3uMse').send_keys(' ')
             driver.find_element_by_class_name('_1U1xa').click()
+        elif perintah[0] == '.?':
+            body[hasilCari[0]].click()
+            if len(perintah) == 1:
+                kirim('contoh : .? <soal>')
+            else:
+                googleSearch = gsearch(hasilCari[1].text.replace('.?','')+' site:brainly.co.id')
+                if len(googleSearch[:-1]) == 0:
+                    kirim('*jawaban dari* : "%s" Tidak Ada')
+                else:
+                    kirim('*%s Jawaban Ditemukan*'%(len(googleSearch[:-1])))
+                    for i in googleSearch[:-1]:
+                        try:
+                            k=brainlyparse(i)
+                        except (IndexError, AttributeError, IndexError):
+                            kirim('konten ke tidak di temukan')
+                            pass
+                        try:
+                            if len(k.ans) == 0:
+                                kirim('*jawaban dari* : "%s" Tidak Ada'%(hasilCari[1].text.replace('.?','')))
+                            else:
+                                try:
+                                    reply="""
+-  Detail Soal
+   Pertanyaan : %s
+   Mata Pelajaran : %s
+   Tingkat Soal : %s
+   Original Url : %s
+=========================
+"""%(k.soal.replace('\n',''), k.mapel.replace('\n',''), k.sekolah.replace('\n',''), i)
+                                except (IndexError, AttributeError, IndexError):
+                                    kirim('konten ke tidak di temukan')
+                                    pass
+                        except UnboundLocalError:
+                                kirim('konten ke tidak di temukan')
+                        for hasi in range(len(k.ans)):
+                            reply+="""
+- Jawaban %s
+%s
+Penjawab : %s
+Terima Kasih : %s
+"""%(hasi+1,k.ans[hasi], k.p[hasi], k.lk[hasi])
+                            kirim(reply)
+
 while True:
     try:
         cari()    
