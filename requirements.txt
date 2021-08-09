@@ -22,7 +22,7 @@ PyNaCl==1.3.0
 pypng==0.0.20
 PyQRCode==1.2.1
 pytz==2019.3
-pywin32==228
+pywin32==301
 pyzbar==0.1.8B
 qrcode==6.1
 requests==2.23.0
